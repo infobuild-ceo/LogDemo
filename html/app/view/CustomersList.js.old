@@ -1,0 +1,65 @@
+﻿Ext.define("CustomersApp.view.CustomersList", {
+    extend: "Ext.Container",
+    requires:"Ext.dataview.List",
+    alias: "widget.customerslistview",
+
+    config: {
+        layout: {
+            type: 'fit'
+        },
+        items: [{
+            xtype: "toolbar",
+            title: "Customers",
+            docked: "top",
+            items: [
+                {
+                    xtype: "button",
+                    text: 'Close',
+                    ui: 'action',
+                    itemId: "closeButton"
+                },
+                { xtype: 'spacer' },
+                {
+                    xtype: "button",
+                    text: 'New',
+                    ui: 'action',
+                    itemId: "newButton"
+                }
+            ]
+        }, {
+            xtype: "list",
+            store: "Customers",
+            itemId:"customersList",
+            loadingText: null, // HWC-note: Set to null to allow HWC to set the activity spinner (since HWC handles n/w load)
+            emptyText: "<div class=\"customers-list-empty-text\">No customers found.</div>",
+            grouped: true,
+            itemTpl: "<div class=\"list-item-company\">{company_name}</div><div class=\"list-item-state\">{state}</div>"       
+        }],
+        listeners: [{
+            delegate: "#newButton",
+            event: "tap",
+            fn: "onNewButtonTap"
+        }, {
+            delegate: "#closeButton",
+            event: "tap",
+            fn: "onCloseButtonTap"
+        },{
+            delegate: "#customersList",
+            event: "itemtap",
+            fn: "onCustomersListTap"
+        }]
+    },    
+    onNewButtonTap: function () {
+        console.log("newCustomerCommand");
+        this.fireEvent("newCustomerCommand", this);
+    },
+    onCloseButtonTap: function () {
+        console.log("closeCustomerCommand");
+        this.fireEvent("closeCustomerCommand", this);
+    },
+    onCustomersListTap: function (view, index, target, record, event) {
+        console.log("editCustomerCommand");
+        this.fireEvent('editCustomerCommand', this, record);
+    }
+    
+});
